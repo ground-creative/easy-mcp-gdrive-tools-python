@@ -39,3 +39,9 @@ CYPHER=Your Encryption Key Here
 # Run via fastapi wrapper
 python3 run.py -s fastapi
 ```
+
+## How To Authenticate
+
+1. Go to auth/login and authenticate
+
+2. Use the paramater X-ACCESS-TOKEN with the request headers when making calls to the server.
