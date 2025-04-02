@@ -26,7 +26,7 @@ MIDDLEWARE = {
     ]
 }
 
-GOOGLE_OAUTH_CLIENT_SECRETS_FILE = "storage/config/client_secrets.json"
+GOOGLE_OAUTH_CLIENT_SECRETS_FILE = "storage/client_secrets.json"
 
 GOOGLE_OAUTH_SCOPES = [
     "openid",
