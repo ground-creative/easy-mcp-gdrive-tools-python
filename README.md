@@ -3,6 +3,15 @@
 This is a set of tools for gdrive to be used with easy mcp server.<br>
 https://github.com/ground-creative/easy-mcp-python
 
+## Capabilities
+
+- List items in drive folders
+- Get items detailed info by id or name
+- Read/Create/Edit documents
+- Read/Create/Edit spreadsheets
+- Delete items
+- Move items to other folders
+
 ## Installation
 
 1. Clone the repository from the root folder of the easy mcp installation:
