@@ -11,7 +11,11 @@ https://github.com/ground-creative/easy-mcp-python
 git clone https://github.com/ground-creative/easy-mcp-gdrive-tools-python.git app
 ```
 
-2. Add `client_secrets.json` in storage folder
+2. Install requirements:
+
+```
+pip install -r app/requirements.txt
+```
 
 3. Generate encryption key:
 
@@ -27,11 +31,7 @@ DB_PATH=storage/sqlite_credentials.db
 CYPHER=Your Encryption Key Here
 ```
 
-5. Install requirements:
-
-```
-pip install -r app/requirements.txt
-```
+5. Add `client_secrets.json` in storage folder
 
 6. Run the server:
 
