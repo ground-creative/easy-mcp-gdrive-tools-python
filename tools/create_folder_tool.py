@@ -1,5 +1,5 @@
 import json
-from typing import Dict
+from typing import Dict, Optional
 from typing_extensions import Annotated
 from pydantic import Field
 from core.utils.logger import logger  # Importing the logger
@@ -12,7 +12,7 @@ def create_drive_folder_tool(
         str, Field(description="The name of the folder to create. Ex: 'New Folder'")
     ],
     parent_id: Annotated[
-        str,
+        Optional[str],
         Field(
             description="The ID of the parent folder (optional). If None, creates in root. Ex: '1234567890abcdef'"
         ),

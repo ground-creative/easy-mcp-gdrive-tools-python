@@ -3,6 +3,7 @@ import importlib
 SERVICES = [
     "core.services.server_info",  # server info html page
     "app.services.google_auth",
+    "app.services.default_tools_messages",
 ]
 
 PRESTART_HOOKS = {
