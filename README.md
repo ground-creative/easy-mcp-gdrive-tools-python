@@ -11,4 +11,4 @@ https://github.com/ground-creative/easy-mcp-python
 git clone https://github.com/ground-creative/easy-mcp-gdrive-tools-python.git app
 ```
 
-2. Add client_secrets.json to storage folder
+2. Add `client_secrets.json` in storage folder
