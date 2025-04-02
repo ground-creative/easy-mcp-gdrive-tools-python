@@ -12,3 +12,30 @@ git clone https://github.com/ground-creative/easy-mcp-gdrive-tools-python.git ap
 ```
 
 2. Add `client_secrets.json` in storage folder
+
+3. Generate encryption key:
+
+```
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+4. Add parameters to env file:
+
+```
+APP_HOST=http://localhost:8000
+DB_PATH=storage/sqlite_credentials.db
+CYPHER=Your Encryption Key Here
+```
+
+5. Install requirements:
+
+```
+pip install -r app/requirements.txt
+```
+
+6. Run the server:
+
+```
+# Run via fastapi wrapper
+python3 run.py -s fastapi
+```
