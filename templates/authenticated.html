@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mcp_server_name }} Authenticated</title>
+    <link rel="icon" href="{{ favicon_url }}" type="image/x-icon"> <!-- Favicon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #1c283e;
+            color: white;
+            padding: 15px 20px;
+            text-align: center; /* Center the text in the header */
+            position: relative; /* Position relative for logo positioning */
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* Position relative for the button */
+        }
+        .logo {
+            max-width: 40px;
+            position: absolute;
+            left: 20px;
+            top: 13px;
+        }
+        h1 {
+            color: white;
+            margin: 0; /* Remove default margin */
+        }
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-top: 20px; /* Add margin to position text lower */
+        }
+        .button-container {
+            display: flex; /* Use Flexbox for alignment */
+            justify-content: flex-end; /* Align buttons to the right */
+            margin-bottom: 20px; /* Add space below buttons */
+        }
+        .copy-button {
+            display: inline-block;
+            background-color: transparent; /* Transparent background */
+            border: none;
+            cursor: pointer; /* Default cursor */
+            color: #7171c3; /* Color for the clipboard icon */
+            font-size: 20px; /* Icon size */
+        }
+        .copy-button:disabled {
+            cursor: auto; /* Change cursor when disabled */
+            color: #7171c3; /* Change color when disabled */
+        }
+        .auth-button, .reset-button {
+            background-color: #1c283e; /* Background color */
+            color: white; /* Text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 5px 10px; /* Padding */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 14px; /* Font size */
+            margin-left: 10px; /* Space between buttons */
+        }
+        .auth-button:hover, .reset-button:hover {
+            background-color: #2a3b5d; /* Darker shade on hover */
+        }
+    </style>
+    <script>
+        function copyToClipboard(element) {
+            const serverUrl = element.getAttribute('data-url'); // Get the URL from data attribute
+            const userId = element.getAttribute('data-user-id'); // Get the user ID from data attribute
+
+            // Copy the appropriate value to clipboard
+            if (userId) {
+                const formattedUserId = `{"X-ACCESS-TOKEN": "${userId}"}`; // Format the user ID
+                navigator.clipboard.writeText(formattedUserId).then(() => {
+                    // Change the icon class to the check icon
+                    const copyButton = element.querySelector('i');
+                    copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
+                    copyButton.classList.add('fa-check'); // Add check icon class
+
+                    // Disable the button temporarily
+                    element.disabled = true;
+
+                    // Change back to clipboard icon after 2 seconds
+                    setTimeout(() => {
+                        copyButton.classList.remove('fa-check'); // Remove check icon class
+                        copyButton.classList.add('fa-copy'); // Add clipboard icon class
+                        element.disabled = false; // Re-enable the button
+                    }, 2000);
+                }).catch(err => {
+                    console.error("Failed to copy: ", err);
+                });
+            } else {
+                navigator.clipboard.writeText(serverUrl).then(() => {
+                    // Change the icon class to the check icon
+                    const copyButton = element.querySelector('i');
+                    copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
+                    copyButton.classList.add('fa-check'); // Add check icon class
+
+                    // Disable the button temporarily
+                    element.disabled = true;
+
+                    // Change back to clipboard icon after 2 seconds
+                    setTimeout(() => {
+                        copyButton.classList.remove('fa-check'); // Remove check icon class
+                        copyButton.classList.add('fa-copy'); // Add clipboard icon class
+                        element.disabled = false; // Re-enable the button
+                    }, 2000);
+                }).catch(err => {
+                    console.error("Failed to copy: ", err);
+                });
+            }
+        }
+
+        function formatUserId(userId) {
+            if (userId.length > 10) {
+                return userId.slice(0, 5) + '...' + userId.slice(-5); // Show first 5 and last 5 characters
+            }
+            return userId; // Return as is if less than or equal to 10 characters
+        }
+
+        function authenticateAgain() {
+            window.location.href = "/auth/login"; // Redirect to login page
+        }
+
+        function resetAccessToken() {
+            // Confirm action with the user
+            const confirmation = confirm("Are you sure that you want to reset your access token? You will need to update all your applications to use the new access token. Please confirm action.");
+            if (confirmation) {
+                // Redirect to the reset access token endpoint
+                window.location.href = "/auth/reset-access-token";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <img src="{{ logo_url }}" alt="Logo" class="logo">
+    <h1>{{ mcp_server_name }} Authentication</h1>
+</header>
+
+<div class="container">
+    <div class="button-container">
+        <button class="auth-button" onclick="authenticateAgain()">
+            <i class="fas fa-lock"></i> Authenticate Again
+        </button>
+        <button class="reset-button" onclick="resetAccessToken()">
+            <i class="fas fa-sync-alt"></i> Reset Access Token
+        </button>
+    </div>
+    <p>You are authenticated, use the following parameters to connect to MCP Server:</p>
+    <p>MCP Server Address: 
+        <span id="mcpServerUrl"><strong><em>{{ mcp_server_url }}</em></strong></span>
+        <button class="copy-button" data-url="{{ mcp_server_url }}" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button> <!-- Copy icon button -->
+    </p>
+    <p>Request Header Parameters: 
+        "<strong>X-ACCESS-TOKEN:</strong> <span id="encryptedUserId">{{ encrypted_user_id }}</span>"
+        <button class="copy-button" data-user-id="{{ encrypted_user_id }}" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
+    </p>
+</div>
+
+<script>
+    // Format the user ID and update the display
+    const userIdElement = document.getElementById('encryptedUserId');
+    userIdElement.innerText = formatUserId(userIdElement.innerText);
+</script>
+
+</body>
+</html>

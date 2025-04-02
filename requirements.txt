@@ -1,0 +1,4 @@
+google-auth-oauthlib==1.2.1
+cryptography==44.0.2
+google-api-python-client==2.166.0
+PyPDF2==3.0.1
