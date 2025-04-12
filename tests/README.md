@@ -14,7 +14,7 @@ TEST_TOKEN=Get a test token from authentication page
 pip install pytest==8.3.5
 ```
 
-3. Run the tests:
+3. Run the tests inside app/tests folder:
 
 ```
 # Run all tests
