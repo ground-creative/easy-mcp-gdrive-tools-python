@@ -1,126 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ mcp_server_name }} Authenticated</title>
     <link rel="icon" href="{{ favicon_url }}" type="image/x-icon"> <!-- Favicon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        crossorigin="anonymous">
     <style>
         body {
+            display: flex;
+            /* Use flexbox layout */
+            flex-direction: column;
+            /* Arrange children in a column */
+            min-height: 100vh;
+            /* Ensure the body takes the full height of the viewport */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
         }
+
         header {
             background-color: #1c283e;
             color: white;
-            padding: 15px 20px;
-            text-align: center; /* Center the text in the header */
-            position: relative; /* Position relative for logo positioning */
+            text-align: center;
+            /* Center the text in the header */
+            position: relative;
+            /* Position relative for logo positioning */
         }
+
         .container {
+            flex: 1;
+            /* Allow the container to grow and take available space */
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative; /* Position relative for the button */
+            position: relative;
+            /* Position relative for the button */
         }
+
         .logo {
             max-width: 40px;
             position: absolute;
             left: 20px;
             top: 13px;
         }
+
         h1 {
             color: white;
-            margin: 0; /* Remove default margin */
+            margin: 0;
+            /* Remove default margin */
         }
+
         p {
             font-size: 16px;
             color: #555;
-            margin-top: 20px; /* Add margin to position text lower */
+            margin-top: 20px;
+            /* Add margin to position text lower */
         }
+
         .button-container {
-            display: flex; /* Use Flexbox for alignment */
-            justify-content: flex-end; /* Align buttons to the right */
-            margin-bottom: 20px; /* Add space below buttons */
+            display: flex;
+            /* Use Flexbox for alignment */
+            justify-content: flex-end;
+            /* Align buttons to the right */
+            margin-bottom: 20px;
+            /* Add space below buttons */
         }
+
         .copy-button {
             display: inline-block;
-            background-color: transparent; /* Transparent background */
+            background-color: transparent;
+            /* Transparent background */
             border: none;
-            cursor: pointer; /* Default cursor */
-            color: #7171c3; /* Color for the clipboard icon */
-            font-size: 20px; /* Icon size */
+            cursor: pointer;
+            /* Default cursor */
+            color: #7171c3;
+            /* Color for the clipboard icon */
+            font-size: 20px;
+            /* Icon size */
         }
+
         .copy-button:disabled {
-            cursor: auto; /* Change cursor when disabled */
-            color: #7171c3; /* Change color when disabled */
+            cursor: auto;
+            /* Change cursor when disabled */
+            color: #7171c3;
+            /* Change color when disabled */
         }
-        .auth-button, .reset-button {
-            background-color: #1c283e; /* Background color */
-            color: white; /* Text color */
-            border: none; /* No border */
-            border-radius: 5px; /* Rounded corners */
-            padding: 5px 10px; /* Padding */
-            cursor: pointer; /* Pointer cursor */
-            font-size: 14px; /* Font size */
-            margin-left: 10px; /* Space between buttons */
+
+        .auth-button,
+        .reset-button {
+            background-color: #1c283e;
+            /* Background color */
+            color: white;
+            /* Text color */
+            border: none;
+            /* No border */
+            border-radius: 5px;
+            /* Rounded corners */
+            padding: 5px 10px;
+            /* Padding */
+            cursor: pointer;
+            /* Pointer cursor */
+            font-size: 14px;
+            /* Font size */
+            margin-left: 10px;
+            /* Space between buttons */
         }
-        .auth-button:hover, .reset-button:hover {
-            background-color: #2a3b5d; /* Darker shade on hover */
+
+        .auth-button:hover,
+        .reset-button:hover {
+            background-color: #2a3b5d;
+            /* Darker shade on hover */
+        }
+
+        .login-anchor {
+            display: inline-block;
+            background-color: #1c283e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .login-anchor:hover {
+            background-color: #2c3e50;
+        }
+
+        footer {
+            background-color: #1c283e;
+            /* Footer background color */
+            color: white;
+            /* Footer text color */
+            text-align: center;
+            /* Center the text */
+            padding: 5px 0;
+            /* Reduced padding */
+            font-size: 12px;
+            /* Adjusted font size */
+        }
+
+        footer p {
+            font-size: 12px;
+            /* Font size for footer text */
+            margin: 5px;
+            /* Margin for footer text */
+        }
+
+        /* Input field styles */
+        .repo-input {
+            margin-top: 10px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            /* Border style */
+            border-radius: 5px;
+            /* Rounded corners */
+            margin: 5px 0;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .span {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .login-anchor {
+            display: inline-block;
+            background-color: #1c283e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .login-anchor:hover {
+            background-color: #2c3e50;
+        }
+
+        @media (max-width: 800px) {
+
+            /* Medium devices (md) */
+            .container {
+                width: 80%;
+            }
+        }
+
+        @media (min-width: 800px) {
+
+            /* Medium devices (md) */
+            .container {
+                width: 800px;
+                max-width: 800px;
+                /* Bootstrap's md breakpoint */
+            }
         }
     </style>
     <script>
+
+        var hideToken = true;
         function copyToClipboard(element) {
             const serverUrl = element.getAttribute('data-url'); // Get the URL from data attribute
-            const userId = element.getAttribute('data-user-id'); // Get the user ID from data attribute
+            navigator.clipboard.writeText(serverUrl).then(() => {
+                // Change the icon class to the check icon
+                const copyButton = element.querySelector('i');
+                copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
+                copyButton.classList.add('fa-check'); // Add check icon class
 
-            // Copy the appropriate value to clipboard
-            if (userId) {
-                const formattedUserId = `{"X-ACCESS-TOKEN": "${userId}"}`; // Format the user ID
-                navigator.clipboard.writeText(formattedUserId).then(() => {
-                    // Change the icon class to the check icon
-                    const copyButton = element.querySelector('i');
-                    copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
-                    copyButton.classList.add('fa-check'); // Add check icon class
+                // Disable the button temporarily
+                element.disabled = true;
 
-                    // Disable the button temporarily
-                    element.disabled = true;
+                // Change back to clipboard icon after 2 seconds
+                setTimeout(() => {
+                    copyButton.classList.remove('fa-check'); // Remove check icon class
+                    copyButton.classList.add('fa-copy'); // Add clipboard icon class
+                    element.disabled = false; // Re-enable the button
+                }, 2000);
+            }).catch(err => {
+                console.error("Failed to copy: ", err);
+            });
 
-                    // Change back to clipboard icon after 2 seconds
-                    setTimeout(() => {
-                        copyButton.classList.remove('fa-check'); // Remove check icon class
-                        copyButton.classList.add('fa-copy'); // Add clipboard icon class
-                        element.disabled = false; // Re-enable the button
-                    }, 2000);
-                }).catch(err => {
-                    console.error("Failed to copy: ", err);
-                });
-            } else {
-                navigator.clipboard.writeText(serverUrl).then(() => {
-                    // Change the icon class to the check icon
-                    const copyButton = element.querySelector('i');
-                    copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
-                    copyButton.classList.add('fa-check'); // Add check icon class
+        }
 
-                    // Disable the button temporarily
-                    element.disabled = true;
+        function copyParamsToClipboard(element) {
+            const repoName = document.getElementById('repoName').value; // Get the repo name from input
+            const userId = "{{ encrypted_user_id }}"; // Replace with actual user ID if needed
 
-                    // Change back to clipboard icon after 2 seconds
-                    setTimeout(() => {
-                        copyButton.classList.remove('fa-check'); // Remove check icon class
-                        copyButton.classList.add('fa-copy'); // Add clipboard icon class
-                        element.disabled = false; // Re-enable the button
-                    }, 2000);
-                }).catch(err => {
-                    console.error("Failed to copy: ", err);
-                });
+            // Construct the header parameters
+            let headerParams = {
+                "X-ACCESS-TOKEN": userId
+            };
+
+            // Add the repo name if provided
+            if (repoName) {
+                headerParams["X-REPO"] = repoName;
             }
+
+            // Convert the header parameters to a JSON string
+            const headerParamsString = JSON.stringify(headerParams, null, 4); // Pretty print with indentation
+
+            // Copy the JSON string to the clipboard
+            navigator.clipboard.writeText(headerParamsString).then(() => {
+                console.log("Header parameters copied to clipboard!");
+                const copyButton = element.querySelector('i');
+                copyButton.classList.remove('fa-copy'); // Remove clipboard icon class
+                copyButton.classList.add('fa-check'); // Add check icon class
+
+                // Disable the button temporarily
+                element.disabled = true;
+
+                // Change back to clipboard icon after 2 seconds
+                setTimeout(() => {
+                    copyButton.classList.remove('fa-check'); // Remove check icon class
+                    copyButton.classList.add('fa-copy'); // Add clipboard icon class
+                    element.disabled = false; // Re-enable the button
+                }, 2000);
+            }).catch(err => {
+                console.error("Failed to copy: ", err);
+            });
         }
 
         function formatUserId(userId) {
@@ -131,7 +283,7 @@
         }
 
         function authenticateAgain() {
-            window.location.href = "/auth/login"; // Redirect to login page
+            window.location.href = "{{ login_uri }}"; // Redirect to login page
         }
 
         function resetAccessToken() {
@@ -142,40 +294,130 @@
                 window.location.href = "/auth/reset-access-token";
             }
         }
+
+        function updateHeaderParameters() {
+            const repoName = document.getElementById('repoName').value; // Get the repo name from input
+            const userId = "{{ encrypted_user_id }}"; // Replace with actual user ID if needed
+
+            // Construct the header parameters
+            let headerParams =
+            {
+                "X-ACCESS-TOKEN": hideToken ? formatUserId(userId) : userId
+            };
+
+            // Add the repo name if provided
+            if (repoName) {
+                headerParams["X-REPO"] = repoName;
+            }
+
+            // Convert the header parameters to a string for display
+            const headerParamsString = JSON.stringify(headerParams, null, 4); // Pretty print with indentation
+
+            // Update the code block with the new header parameters
+            document.getElementById('headerParamsCode').innerText = "\n" + headerParamsString;
+        }
+
+        function showParams(element) {
+            hideToken = !hideToken;
+            updateHeaderParameters();
+            const copyButton = element.querySelector('i');
+            if (hideToken) {
+                copyButton.classList.remove('fa-eye'); // Remove clipboard icon class
+                copyButton.classList.add('fa-eye-slash'); // Add check icon class
+            } else {
+                copyButton.classList.remove('fa-eye-slash'); // Remove clipboard icon class
+                copyButton.classList.add('fa-eye'); // Add check icon class
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Call updateHeaderParameters when the DOM is fully loaded
+            updateHeaderParameters();
+        });
     </script>
 </head>
+
 <body>
 
-<header>
-    <img src="{{ logo_url }}" alt="Logo" class="logo">
-    <h1>{{ mcp_server_name }} Authentication</h1>
-</header>
+    <header>
+        {% if logo_url %}
+        {% if site_url %}
+        <a href="{{ site_url }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ logo_url }}" alt="{{ server_name }}" class="logo">
+        </a>
+        {% else %}
+        <img src="{{ logo_url }}" alt="{{ server_name }}" class="logo">
+        {% endif %}
+        {% endif %}
+        <h2>{{ mcp_server_name }} Authentication</h2>
+    </header>
 
-<div class="container">
-    <div class="button-container">
-        <button class="auth-button" onclick="authenticateAgain()">
-            <i class="fas fa-lock"></i> Authenticate Again
-        </button>
-        <button class="reset-button" onclick="resetAccessToken()">
-            <i class="fas fa-sync-alt"></i> Reset Access Token
-        </button>
+    <div class="container">
+        <div class="button-container">
+            <button class="auth-button" onclick="authenticateAgain()">
+                <i class="fas fa-lock"></i> Authenticate Again
+            </button>
+            <button class="reset-button" onclick="resetAccessToken()">
+                <i class="fas fa-sync-alt"></i> Reset Access Token
+            </button>
+        </div>
+        <p>Status: <strong>Authenticated ✅</strong></p>
+        <p>Server Info Page:
+            <a href="{{ service_info_url }}" class="login-anchor" rel="noopener noreferrer">
+                <strong>{{ service_info_url }}</strong>
+            </a>
+        </p>
+        <p>MCP Server URL:
+            <span id="mcpServerUrl" class="login-anchor"><strong>{{ mcp_server_url }}</strong></span>
+            <button class="copy-button" data-url="{{ mcp_server_url }}" onclick="copyToClipboard(this)"><i
+                    class="fas fa-copy"></i></button> <!-- Copy icon button -->
+        </p>
+        <h3>Header Parameters:</h3>
+        <!-- Input for repository name -->
+        <label for="repoName" class="label" style="display: none">Repository Name (Optional):</label>
+        <input type="text" id="repoName" style="display: none" class="repo-input" placeholder="Ex: 'owner/repo'"
+            oninput="updateHeaderParameters()">
+        <!--<br>
+        <br>-->
+        <span class="span">Copy the following header parameters and use them in your requests:</span>
+        <div
+            style="position: relative; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; overflow: auto; padding: 10px;margin-top: 10px;">
+            <button class="copy-button"
+                style="position: absolute; top: 10px; right: 40px; background-color: transparent; border: none; cursor: pointer; color: #1c283e; font-size: 20px;"
+                onclick="copyParamsToClipboard(this)">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button class="copy-button"
+                style="position: absolute; top: 10px; right:10px; background-color: transparent; border: none; cursor: pointer; color: #1c283e; font-size: 20px;"
+                onclick="showParams(this)">
+                <i class="fas fa-eye-slash"></i>
+            </button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">
+            <code id="headerParamsCode">
+{
+    "X-ACCESS-TOKEN": "XXXXX"
+}
+            </code>
+        </pre>
+        </div>
     </div>
-    <p>You are authenticated, use the following parameters to connect to MCP Server:</p>
-    <p>MCP Server Address: 
-        <span id="mcpServerUrl"><strong><em>{{ mcp_server_url }}</em></strong></span>
-        <button class="copy-button" data-url="{{ mcp_server_url }}" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button> <!-- Copy icon button -->
-    </p>
-    <p>Request Header Parameters: 
-        "<strong>X-ACCESS-TOKEN:</strong> <span id="encryptedUserId">{{ encrypted_user_id }}</span>"
-        <button class="copy-button" data-user-id="{{ encrypted_user_id }}" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i></button>
-    </p>
-</div>
 
-<script>
-    // Format the user ID and update the display
-    const userIdElement = document.getElementById('encryptedUserId');
-    userIdElement.innerText = formatUserId(userIdElement.innerText);
-</script>
+    <!-- Footer Section -->
+    <footer>
+        {% if site_url %}
+        <p>
+            Powered by <a href="{{ site_url }}" target="_blank" class="login-anchor"
+                style="color: white; text-decoration: underline;" rel="noopener noreferrer">{{ site_name }}</a>
+        </p>
+        {% endif %}
+    </footer>
+
+    <script>
+        // Format the user ID and update the display
+        //const userIdElement = document.getElementById('encryptedUserId');
+        //userIdElement.innerText = formatUserId(userIdElement.innerText);
+    </script>
 
 </body>
+
 </html>

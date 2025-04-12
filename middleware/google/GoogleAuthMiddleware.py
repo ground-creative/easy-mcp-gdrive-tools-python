@@ -25,14 +25,16 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         """Authenticate with Google Drive and Docs before processing the request."""
-        logger.info("MCP Route middlare GoogleAuthMiddleware checking credentials")
+        logger.info("GoogleAuthMiddleware: checking credentials")
         try:
-            global_state.set("is_authenticated", False, True)
+            global_state.set(
+                "middleware.GoogleAuthMiddleware.is_authenticated", False, True
+            )
             access_token = request.headers.get("x-access-token", None)
 
             if not access_token:
                 global_state.set(
-                    "error_message",
+                    "middleware.GoogleAuthMiddleware.error_message",
                     f"X-ACCESS-TOKEN is a required header parameter. Please go to {EnvConfig.get('APP_HOST')}/auth/login to get the required paramaters.",
                     True,
                 )
@@ -42,7 +44,7 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
                 cred = self.db_handler.get_credentials(access_token)
             except Exception as e:
                 global_state.set(
-                    "error_message",
+                    "middleware.GoogleAuthMiddleware.error_message",
                     f"There has been an error with authenticating, please go to {EnvConfig.get('APP_HOST')}/auth/login and authenticate again",
                     True,
                 )
@@ -50,11 +52,13 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
 
             if "error" in cred:
                 global_state.set(
-                    "error_message",
+                    "middleware.GoogleAuthMiddleware.error_message",
                     f"There has been an error with authenticating, please go to {EnvConfig.get('APP_HOST')}/auth/login and authenticate again",
                     True,
                 )
-                logger.warning("No credentials found. Redirecting to login.")
+                logger.warning(
+                    "GoogleAuthMiddleware: No credentials found. Redirecting to login."
+                )
                 return await call_next(request)  # Proceed without authentication
 
             # Extract credentials
@@ -62,13 +66,15 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
             try:
                 creds = Credentials.from_authorized_user_info(credentials)
             except Exception as e:
-                logger.error(f"Error initializing credentials: {str(e)}")
+                logger.error(
+                    f"GoogleAuthMiddleware error initializing credentials: {str(e)}"
+                )
                 return await call_next(request)
 
             # Validate credentials
             if not creds or not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
-                    logger.info("Refreshing expired credentials.")
+                    logger.info("GoogleAuthMiddleware: Refreshing expired credentials.")
                     try:
                         creds = Credentials(
                             None,
@@ -85,27 +91,28 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
                         )
                         user_id = id_info["sub"]
                         logger.info(
-                            f"New access token for user {user_id}: {creds.token}"
+                            f"GoogleAuthMiddleware new access token for user {user_id}: {creds.token}"
                         )
 
                         self.db_handler.update_access_token(user_id, creds.token)
 
                     except Exception as e:
                         logger.error(
-                            f"Error refreshing credentials: {str(e)}", exc_info=True
+                            f"GoogleAuthMiddleware error refreshing credentials: {str(e)}",
+                            exc_info=True,
                         )
                         global_state.set(
-                            "error_message",
+                            "middleware.GoogleAuthMiddleware.error_message",
                             f"There has been an error with authenticating, please go to {EnvConfig.get('APP_HOST')}/auth/login and authenticate again",
                             True,
                         )
                         return await call_next(request)
 
                 else:
-                    logger.warning("Invalid credentials.")
+                    logger.warning("GoogleAuthMiddleware: Invalid credentials.")
                     # self.db_handler.delete_credentials(encrypted_user_id)
                     global_state.set(
-                        "error_message",
+                        "middleware.GoogleAuthMiddleware.error_message",
                         f"There has been an error with authenticating, please deauthenticate the app and go to {EnvConfig.get('APP_HOST')}/auth/login",
                         True,
                     )
@@ -114,14 +121,16 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
             # Attach services to request state
             self.auth_callback()(creds)
 
-            global_state.set("is_authenticated", True, True)
+            global_state.set(
+                "middleware.GoogleAuthMiddleware.is_authenticated", True, True
+            )
             response = await call_next(request)
             return response
 
         except Exception as e:
-            logger.error(f"Authentication failed: {str(e)}")
+            logger.error(f"GoogleAuthMiddleware authentication failed: {str(e)}")
             global_state.set(
-                "error_message",
+                "middleware.GoogleAuthMiddleware.error_message",
                 f"There has been an error with authenticating, please go to {EnvConfig.get('APP_HOST')}/auth/login to authenticate",
                 True,
             )
@@ -130,18 +139,17 @@ class GoogleAuthMiddleware(BaseHTTPMiddleware):
 
 def check_access(returnJsonOnError=False):
 
-    if not global_state.get("is_authenticated"):
-        logger.error("User is not authenticated.")
+    if not global_state.get("middleware.GoogleAuthMiddleware.is_authenticated"):
+        logger.error("GoogleAuthMiddleware: User is not authenticated.")
 
         if returnJsonOnError:
-            return json.dumps(
-                {
-                    "status": "error",
-                    "error": global_state.get(
-                        "error_message", "User is not authenticated."
-                    ),
-                }
-            )
+            return {
+                "status": "error",
+                "error": global_state.get(
+                    "middleware.GoogleAuthMiddleware.error_message",
+                    "User is not authenticated.",
+                ),
+            }
 
         return "User is not authenticated."
 

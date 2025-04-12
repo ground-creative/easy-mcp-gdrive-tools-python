@@ -1,10 +1,14 @@
-import json
 from core.utils.logger import logger  # Importing the logger
 from core.utils.state import global_state  # Import global state
 from app.middleware.google.GoogleAuthMiddleware import check_access
+from core.utils.tools import doc_tag
+
+# Define the validity duration for the confirmation token (in seconds)
+CONFIRMATION_TOKEN_VALIDITY_DURATION = 5 * 60  # 5 minutes
 
 
-def move_item_tool(item_id: str, new_parent_id: str) -> str:
+@doc_tag("Drive")
+def move_item_tool(item_id: str, new_parent_id: str) -> dict:
     """
     Moves a file or folder to a new folder in Google Drive.
 
@@ -13,21 +17,22 @@ def move_item_tool(item_id: str, new_parent_id: str) -> str:
     - new_parent_id (str): The ID of the new parent folder.
 
     Returns:
-    - JSON string indicating success or error.
+    - dict indicating success or error.
     """
 
     # Check authentication
     auth_response = check_access(True)
     if auth_response:
-        return auth_response
+        return auth_response  # Already a dict
 
     # Retrieve the Google Drive service from global state
     service = global_state.get("google_drive_service")
     if service is None:
         logger.error("Google Drive service is not available in global state.")
-        return json.dumps(
-            {"status": "error", "error": "Google Drive service is not initialized."}
-        )
+        return {
+            "status": "error",
+            "error": f"Google Drive permission scope not available, please add this scope here: {EnvConfig.get('APP_HOST')}/auth/login",
+        }
 
     try:
         logger.info(
@@ -40,7 +45,6 @@ def move_item_tool(item_id: str, new_parent_id: str) -> str:
 
         # Move the item by updating its parents
         if current_parents:
-            # Remove the item from its current parents
             service.files().update(
                 fileId=item_id,
                 removeParents=",".join(current_parents),
@@ -51,17 +55,14 @@ def move_item_tool(item_id: str, new_parent_id: str) -> str:
         logger.info(
             f"Successfully moved item ID: {item_id} to new parent ID: {new_parent_id}."
         )
-        return json.dumps(
-            {
-                "status": "success",
-                "message": f"Item ID: {item_id} moved to folder ID: {new_parent_id}.",
-            }
-        )
+        return {
+            "status": "success",
+            "message": f"Item ID: {item_id} moved to folder ID: {new_parent_id}.",
+        }
+
     except Exception as e:
         logger.error(f"Failed to move item: {str(e)}")
-        return json.dumps(
-            {
-                "status": "error",
-                "error": f"Failed to move item: {str(e)}",
-            }
-        )
+        return {
+            "status": "error",
+            "error": str(e),  # Return raw Google error message
+        }

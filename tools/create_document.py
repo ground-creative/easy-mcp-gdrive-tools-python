@@ -1,13 +1,15 @@
-import json
-from typing import Dict, Optional
+from typing import Optional
 from typing_extensions import Annotated
 from pydantic import Field
-from core.utils.logger import logger  # Importing the logger
-from core.utils.state import global_state  # Import global state
+from core.utils.logger import logger
+from core.utils.state import global_state
+from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
+from core.utils.tools import doc_tag
 
 
-def create_google_doc_tool(
+@doc_tag("Docs")
+def create_document_tool(
     title: Annotated[
         str, Field(description="The title of the document to create. Ex: 'My Document'")
     ],
@@ -19,8 +21,8 @@ def create_google_doc_tool(
         Field(
             description="The ID of the parent folder to create the document in (optional)."
         ),
-    ] = None,  # Optional parameter for parent folder ID
-) -> str:  # Change return type to str
+    ] = None,
+) -> dict:
     """
     Creates a new Google Docs document with the specified content.
 
@@ -30,14 +32,7 @@ def create_google_doc_tool(
     - parent_folder_id (str, optional): The ID of the parent folder to create the document in.
 
     Returns:
-    - JSON string indicating success or error.
-
-    Example Response on Success:
-    {
-        "status": "success",
-        "message": "Document created successfully.",
-        "document_id": "abcdef1234567890"
-    }
+    - A dictionary indicating success or error, without JSON serialization.
     """
 
     # Check authentication
@@ -45,15 +40,13 @@ def create_google_doc_tool(
     if auth_response:
         return auth_response
 
-    # Retrieve the Google Docs service from global state
-    service = global_state.get(
-        "google_docs_service"
-    )  # Ensure you are using the correct service
+    service = global_state.get("google_docs_service")
     if service is None:
         logger.error("Google Docs service is not available in global state.")
-        return json.dumps(
-            {"status": "error", "error": "Google Docs service is not initialized."}
-        )
+        return {
+            "status": "error",
+            "error": f"Google Docs permission scope not available, please add this scope here: {EnvConfig.get('APP_HOST')}/auth/login",
+        }
 
     try:
         # Create the document
@@ -83,12 +76,10 @@ def create_google_doc_tool(
             )  # Get the Google Drive service
             if drive_service is None:
                 logger.error("Google Drive service is not available in global state.")
-                return json.dumps(
-                    {
-                        "status": "error",
-                        "error": "Google Drive service is not initialized.",
-                    }
-                )
+                return {
+                    "status": "error",
+                    "error": "Google Drive service is not initialized.",
+                }
 
             # Move the document to the specified folder
             drive_service.files().update(
@@ -99,15 +90,11 @@ def create_google_doc_tool(
             ).execute()
 
         logger.info(f"Successfully created document '{title}' with ID: {document_id}.")
-        return json.dumps(
-            {
-                "status": "success",
-                "message": "Document created successfully.",
-                "document_id": document_id,
-            }
-        )
+        return {
+            "status": "success",
+            "message": "Document created successfully.",
+            "document_id": document_id,
+        }
     except Exception as e:
         logger.error(f"Failed to create document: {str(e)}")
-        return json.dumps(
-            {"status": "error", "error": f"Failed to create document: {str(e)}"}
-        )  # JSON-compatible error response
+        return {"status": "error", "error": f"Failed to create document: {str(e)}"}

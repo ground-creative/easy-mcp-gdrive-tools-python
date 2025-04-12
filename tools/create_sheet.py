@@ -1,13 +1,15 @@
-import json
 from typing import Optional
 from typing_extensions import Annotated
 from pydantic import Field
-from core.utils.logger import logger  # Importing the logger
-from core.utils.state import global_state  # Import global state
+from core.utils.logger import logger
+from core.utils.state import global_state
+from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
+from core.utils.tools import doc_tag
 
 
-def create_google_sheet_tool(
+@doc_tag("Sheets")
+def create_sheet_tool(
     title: Annotated[
         str, Field(description="The title of the sheet to create. Ex: 'My Spreadsheet'")
     ],
@@ -17,7 +19,7 @@ def create_google_sheet_tool(
             description="The ID of the parent folder to create the sheet in (optional)."
         ),
     ] = None,
-) -> str:  # Change return type to str
+) -> dict:
     """
     Creates a new Google Sheets document with the specified title.
 
@@ -26,14 +28,7 @@ def create_google_sheet_tool(
     - parent_folder_id (str, optional): The ID of the parent folder to create the sheet in.
 
     Returns:
-    - JSON string indicating success or error.
-
-    Example Response on Success:
-    {
-        "status": "success",
-        "message": "Sheet created successfully.",
-        "sheet_id": "abcdef1234567890"
-    }
+    - Dictionary indicating success or error.
     """
 
     # Check authentication
@@ -42,14 +37,13 @@ def create_google_sheet_tool(
         return auth_response
 
     # Retrieve the Google Sheets service from global state
-    service = global_state.get(
-        "google_sheets_service"
-    )  # Ensure you are using the correct service
+    service = global_state.get("google_sheets_service")
     if service is None:
         logger.error("Google Sheets service is not available in global state.")
-        return json.dumps(
-            {"status": "error", "error": "Google Sheets service is not initialized."}
-        )
+        return {
+            "status": "error",
+            "error": f"Google Sheets permission scope not available, please add this scope here: {EnvConfig.get('APP_HOST')}/auth/login",
+        }
 
     try:
         # Create the sheet
@@ -59,19 +53,14 @@ def create_google_sheet_tool(
 
         # If a parent folder ID is provided, move the sheet to that folder
         if parent_folder_id:
-            drive_service = global_state.get(
-                "google_drive_service"
-            )  # Get the Google Drive service
+            drive_service = global_state.get("google_drive_service")
             if drive_service is None:
                 logger.error("Google Drive service is not available in global state.")
-                return json.dumps(
-                    {
-                        "status": "error",
-                        "error": "Google Drive service is not initialized.",
-                    }
-                )
+                return {
+                    "status": "error",
+                    "error": "Google Drive service is not initialized.",
+                }
 
-            # Attempt to move the sheet to the specified folder
             try:
                 drive_service.files().update(
                     fileId=sheet_id,
@@ -84,23 +73,21 @@ def create_google_sheet_tool(
                 )
             except Exception as e:
                 logger.error(f"Failed to move sheet to folder: {str(e)}")
-                return json.dumps(
-                    {
-                        "status": "error",
-                        "error": f"Failed to move sheet to folder: {str(e)}",
-                    }
-                )
+                return {
+                    "status": "error",
+                    "error": f"{str(e)}",
+                }
 
         logger.info(f"Successfully created sheet '{title}' with ID: {sheet_id}.")
-        return json.dumps(
-            {
-                "status": "success",
-                "message": "Sheet created successfully.",
-                "sheet_id": sheet_id,
-            }
-        )
+        return {
+            "status": "success",
+            "message": "Sheet created successfully.",
+            "sheet_id": sheet_id,
+        }
+
     except Exception as e:
         logger.error(f"Failed to create sheet: {str(e)}")
-        return json.dumps(
-            {"status": "error", "error": f"Failed to create sheet: {str(e)}"}
-        )  # JSON-compatible error response
+        return {
+            "status": "error",
+            "error": f"{str(e)}",
+        }

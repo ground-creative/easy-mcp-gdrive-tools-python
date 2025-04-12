@@ -6,13 +6,13 @@ from core.utils.state import global_state
 from core.utils.env import EnvConfig
 
 
-def init_db(server_name):
+def init_db(server_name, dbPath=None):
     encryption_key = EnvConfig.get("CYPHER")
     cipher = Fernet(encryption_key)
-    db_path = EnvConfig.get("DB_PATH")
+    db_path = EnvConfig.get("DB_PATH") if dbPath is None else dbPath
     db_handler = DatabaseHandler(db_path, cipher)
     global_state.set("db_handler", db_handler)
-    logger.info("Database initialized successfully.")
+    logger.info("GoogleAuthMiddleware: Database initialized successfully.")
 
 
 class DatabaseHandler:
@@ -26,7 +26,7 @@ class DatabaseHandler:
     def initialize_db(self):
         """Create the SQLite database and tables if they do not exist."""
         logger.info(
-            f"Initializing database at: {self.db_path}"
+            f"GoogleAuthMiddleware initializing database at: {self.db_path}"
         )  # Log database initialization
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -52,7 +52,7 @@ class DatabaseHandler:
     def insert_credentials(self, user_id: str, credentials_json: dict):
         """Insert encrypted JSON credentials into the database."""
         logger.info(
-            f"Inserting credentials for user_id: {user_id}"
+            f"GoogleAuthMiddleware inserting credentials for user_id: {user_id}"
         )  # Log credential insertion
 
         # Connect to the database
@@ -78,7 +78,9 @@ class DatabaseHandler:
                 if credentials_json["refresh_token"]
                 else existing_credentials_json.get("refresh_token")
             )
-            logger.info(f"Existing credentials found for user_id: {user_id}.")
+            logger.info(
+                f"GoogleAuthMiddleware existing credentials found for user_id: {user_id}."
+            )
         else:
             # Generate a new access token
             access_token = (
@@ -87,7 +89,7 @@ class DatabaseHandler:
                 .decode()
             )
             logger.info(
-                f"No existing credentials found for user_id: {user_id}. Generated new access token."
+                f"GoogleAuthMiddleware no existing credentials found for user_id: {user_id}. Generated new access token."
             )
 
         encrypted_credentials = self.cipher.encrypt(
@@ -110,7 +112,7 @@ class DatabaseHandler:
         cursor.close()
         conn.close()
         logger.info(
-            f"Credentials for user_id: {user_id} inserted/updated successfully."
+            f"GoogleAuthMiddleware credentials for user_id: {user_id} inserted/updated successfully."
         )  # Log success
 
         return access_token  # Return the access token (existing or new)
@@ -119,13 +121,13 @@ class DatabaseHandler:
         """Retrieve and decrypt JSON credentials based on access token or user ID."""
         if by_access_token:
             logger.info(
-                f"Retrieving credentials for access_token: {identifier}"
+                f"GoogleAuthMiddleware retrieving credentials for access_token: {identifier}"
             )  # Log credential retrieval
             query = "SELECT credentials_json, access_token, user_id FROM user_credentials WHERE access_token = ?;"
             params = (identifier,)
         else:
             logger.info(
-                f"Retrieving credentials for user_id: {identifier}"
+                f"GoogleAuthMiddleware retrieving credentials for user_id: {identifier}"
             )  # Log credential retrieval
             query = "SELECT credentials_json, access_token FROM user_credentials WHERE user_id = ?;"
             params = (identifier,)
@@ -148,7 +150,7 @@ class DatabaseHandler:
                 result[2] if by_access_token else identifier
             )  # Get user_id if searching by access token
             logger.info(
-                f"Credentials retrieved successfully for identifier: {identifier}"
+                f"GoogleAuthMiddleware credentials retrieved successfully for identifier: {identifier}"
             )  # Log success
             return {
                 "user_id": user_id,
@@ -164,7 +166,7 @@ class DatabaseHandler:
     def delete_credentials(self, access_token: str, user_id: str):
         """Delete credentials from the database based on access token and user ID."""
         logger.info(
-            f"Attempting to delete credentials for access_token: {access_token} and user_id: {user_id}"
+            f"GoogleAuthMiddleware attempting to delete credentials for access_token: {access_token} and user_id: {user_id}"
         )  # Log credential deletion attempt
 
         conn = sqlite3.connect(self.db_path)
@@ -181,11 +183,11 @@ class DatabaseHandler:
         # Check if any rows were deleted
         if cursor.rowcount > 0:
             logger.info(
-                f"Credentials for user_id: {user_id} deleted successfully."
+                f"GoogleAuthMiddleware credentials for user_id: {user_id} deleted successfully."
             )  # Log success
         else:
             logger.warning(
-                f"No credentials found for access_token: {access_token} and user_id: {user_id}"
+                f"GoogleAuthMiddleware no credentials found for access_token: {access_token} and user_id: {user_id}"
             )  # Log warning for not found
 
         cursor.close()
@@ -194,7 +196,7 @@ class DatabaseHandler:
     def update_access_token(self, user_id: str, new_access_token: str):
         """Update the access token in the credentials_json for a specific user in the database."""
         logger.info(
-            f"Updating access token for user_id: {user_id}"
+            f"GoogleAuthMiddleware updating access token for user_id: {user_id}"
         )  # Log the update attempt
 
         # Connect to the database
@@ -235,11 +237,11 @@ class DatabaseHandler:
 
             conn.commit()
             logger.info(
-                f"Access token updated successfully for user_id: {user_id}."
+                f"GoogleAuthMiddleware access token updated successfully for user_id: {user_id}."
             )  # Log success
         else:
             logger.warning(
-                f"No credentials found for user_id: {user_id}."
+                f"GoogleAuthMiddleware no credentials found for user_id: {user_id}."
             )  # Log warning if not found
 
         cursor.close()

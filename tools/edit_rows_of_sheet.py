@@ -1,13 +1,15 @@
-import json
 from typing import List
 from typing_extensions import Annotated
 from pydantic import Field
-from core.utils.logger import logger  # Importing the logger
-from core.utils.state import global_state  # Import global state
+from core.utils.logger import logger
+from core.utils.state import global_state
+from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
+from core.utils.tools import doc_tag
 
 
-def edit_content_in_google_sheet_tool(
+@doc_tag("Sheets")
+def edit_rows_tool(
     sheet_id: Annotated[
         str, Field(description="The ID of the sheet to edit content in.")
     ],
@@ -20,9 +22,9 @@ def edit_content_in_google_sheet_tool(
             description="A list of lists representing the new content to replace existing content."
         ),
     ],
-) -> str:
+) -> dict:
     """
-    Edits content in an existing Google Sheets document.
+    Edits rows in an existing Google Sheets document.
 
     Args:
     - sheet_id (str): The ID of the sheet to edit content in.
@@ -30,13 +32,7 @@ def edit_content_in_google_sheet_tool(
     - values (list): A list of lists representing the new content to replace existing content.
 
     Returns:
-    - JSON string indicating success or error.
-
-    Example Response on Success:
-    {
-        "status": "success",
-        "message": "Content edited successfully."
-    }
+    - Dictionary indicating success or error.
     """
 
     # Check authentication
@@ -48,9 +44,10 @@ def edit_content_in_google_sheet_tool(
     service = global_state.get("google_sheets_service")
     if service is None:
         logger.error("Google Sheets service is not available in global state.")
-        return json.dumps(
-            {"status": "error", "error": "Google Sheets service is not initialized."}
-        )
+        return {
+            "status": "error",
+            "error": f"Google Sheets permission scope not available, please add this scope here: {EnvConfig.get('APP_HOST')}/auth/login",
+        }
 
     try:
         # Prepare the request body
@@ -58,15 +55,21 @@ def edit_content_in_google_sheet_tool(
 
         # Update the sheet with the new content
         service.spreadsheets().values().update(
-            spreadsheetId=sheet_id, range=range_name, valueInputOption="RAW", body=body
+            spreadsheetId=sheet_id,
+            range=range_name,
+            valueInputOption="RAW",
+            body=body,
         ).execute()
 
         logger.info(f"Successfully edited content in sheet ID: {sheet_id}.")
-        return json.dumps(
-            {"status": "success", "message": "Content edited successfully."}
-        )
+        return {
+            "status": "success",
+            "message": "Content edited successfully.",
+        }
+
     except Exception as e:
         logger.error(f"Failed to edit content in sheet: {str(e)}")
-        return json.dumps(
-            {"status": "error", "error": f"Failed to edit content in sheet: {str(e)}"}
-        )  # JSON-compatible error response
+        return {
+            "status": "error",
+            "error": str(e),
+        }

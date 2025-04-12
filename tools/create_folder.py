@@ -1,23 +1,25 @@
-import json
-from typing import Dict
+from typing import Dict, Optional
 from typing_extensions import Annotated
 from pydantic import Field
-from core.utils.logger import logger  # Importing the logger
-from core.utils.state import global_state  # Import global state
+from core.utils.logger import logger
+from core.utils.state import global_state
+from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
+from core.utils.tools import doc_tag
 
 
-def create_drive_folder_tool(
+@doc_tag("Drive")
+def create_folder_tool(
     folder_name: Annotated[
         str, Field(description="The name of the folder to create. Ex: 'New Folder'")
     ],
     parent_id: Annotated[
-        str,
+        Optional[str],
         Field(
             description="The ID of the parent folder (optional). If None, creates in root. Ex: '1234567890abcdef'"
         ),
     ] = None,
-) -> str:  # Change return type to str
+) -> dict:
     """
     Creates a new folder in Google Drive.
 
@@ -26,23 +28,7 @@ def create_drive_folder_tool(
     - parent_id (str): The ID of the parent folder (optional). If None, creates in root.
 
     Returns:
-    - JSON string containing the folder name and its corresponding ID on success.
-    - JSON string with an error message on failure.
-
-    Example Payload:
-    {
-        "folder_name": "New Folder",
-        "parent_id": "1234567890abcdef"  # Optional
-    }
-
-    Example Response on Success:
-    {
-        "status": "success",
-        "data": {
-            "name": "New Folder",
-            "id": "abcdef1234567890"
-        }
-    }
+    - dict: Dictionary containing the folder name and its corresponding ID on success, or error message on failure.
     """
 
     # Check authentication
@@ -54,18 +40,19 @@ def create_drive_folder_tool(
     service = global_state.get("google_drive_service")
     if service is None:
         logger.error("Google Drive service is not available in global state.")
-        return json.dumps(
-            {"status": "error", "error": "Google Drive service is not initialized."}
-        )
+        return {
+            "status": "error",
+            "error": f"Google Drive permission scope not available, please add this scope here: {EnvConfig.get('APP_HOST')}/auth/login",
+        }
 
-    # Create the folder
+    # Create the folder metadata
     file_metadata = {
         "name": folder_name,
         "mimeType": "application/vnd.google-apps.folder",
     }
 
     if parent_id:
-        file_metadata["parents"] = [parent_id]  # Set parent folder ID if provided
+        file_metadata["parents"] = [parent_id]
         logger.debug(
             f"Creating subfolder '{folder_name}' under parent ID '{parent_id}'."
         )
@@ -77,17 +64,13 @@ def create_drive_folder_tool(
         logger.info(
             f"Successfully created folder '{folder_name}' with ID: {folder.get('id')}."
         )
-        return json.dumps(
-            {
-                "status": "success",
-                "data": {"name": folder_name, "id": folder.get("id")},
-            }
-        )
+        return {
+            "status": "success",
+            "data": {"name": folder_name, "id": folder.get("id")},
+        }
     except Exception as e:
         logger.error(f"Failed to create folder: {str(e)}")
-        return json.dumps(
-            {
-                "status": "error",
-                "error": f"Failed to create folder: {str(e)}",
-            }
-        )
+        return {
+            "status": "error",
+            "error": str(e),  # Return raw error string from Google API
+        }

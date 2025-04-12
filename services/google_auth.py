@@ -19,6 +19,9 @@ templates_directory = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "../templates")
 )
 templates = Jinja2Templates(directory=templates_directory)
+server_info_config = config.get("INFO_SERVICE_CONFIG", {})
+main_url = server_info_config.get("service_uri", "/")
+login_uri = "/auth/login"
 
 router = APIRouter()
 
@@ -85,11 +88,11 @@ async def auth_callback(request: Request):
         user_id = None
         granted_scopes = credentials._granted_scopes
 
-        if not all(
-            scope in granted_scopes for scope in config.get("GOOGLE_OAUTH_SCOPES")
-        ):
-            logger.warning("Not all required scopes were granted.")
-            return RedirectResponse(url="/auth/login")
+        # if not all(
+        #    scope in granted_scopes for scope in config.get("GOOGLE_OAUTH_SCOPES")
+        # ):
+        #    logger.warning("Not all required scopes were granted.")
+        #    return RedirectResponse(url="/auth/login")
 
         try:
             id_info = id_token.verify_oauth2_token(
@@ -146,13 +149,20 @@ async def authenticated(request: Request, access_token: str = Cookie(None)):
         logger.warning("Credentials not found for access token.")
         return RedirectResponse(url="/auth/login")
 
+    site_url = server_info_config.get("site_url", "")
+    site_name = server_info_config.get("site_name", site_url)
+
     return templates.TemplateResponse(
         "authenticated.html",
         {
             "request": request,
             "encrypted_user_id": access_token,
             "logo_url": EnvConfig.get("SERVICES_LOGO_URL"),
+            "login_uri": login_uri,
             "favicon_url": EnvConfig.get("SERVICES_FAVICON_URL"),
+            "service_info_url": EnvConfig.get("APP_HOST"),
+            "site_url": site_url,
+            "site_name": site_name,
             "mcp_server_url": f"{EnvConfig.get('MCP_SERVER_URL')}",
             "mcp_server_name": EnvConfig.get("SERVER_NAME"),
         },
