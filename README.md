@@ -24,47 +24,6 @@ https://github.com/ground-creative/easy-mcp-python
 This application uses Google's OAuth service to authenticate users.
 To use this app, you must create an OAuth 2.0 Client ID in the Google Cloud Console and configure the appropriate scopes for your application.
 
-### How to Create a Google OAuth 2.0 Client ID
-
-1. Go to Google Cloud Console:
-   https://console.cloud.google.com/
-   
-2. Create or Select a Project:
-   - Click on the project dropdown at the top.
-   - Select an existing project or click "New Project" to create a new one.
-
-3. Enable Required APIs:
-   - Navigate to: APIs & Services > Library
-   - Search for and enable the following APIs:
-     - Google Drive API
-     - Google Docs API
-     - Google Sheets API (if needed)
-
-4. Configure OAuth Consent Screen:
-   - Go to: APIs & Services > OAuth consent screen
-   - Choose "External" for public apps, or "Internal" for private use.
-   - Fill in the required fields:
-     - App name
-     - User support email
-     - Developer contact info
-   - Add necessary scopes (e.g. `https://www.googleapis.com/auth/drive`)
-   - Save and continue
-
-5. Create OAuth 2.0 Credentials:
-   - Go to: APIs & Services > Credentials
-   - Click "Create Credentials" > "OAuth client ID"
-   - Choose the type based on your application:
-     - Web application
-     - Desktop app
-     - Other
-   - For web apps, add authorized redirect URIs (e.g. `https://your-app.com/auth/callback`)
-   - Add authorized JavaScript origins if required
-
-6. Save Your Credentials:
-   - After creating, Google will show:
-     - Client ID
-     - Client Secret
-   - Store these securely. You’ll need them in your app to authenticate users.
 
 ## Installation
 
@@ -127,3 +86,45 @@ The following tools are provided by this MCP server:
 | Edit Rows of Spreadsheet | Edits rows in an existing Google Sheets document | sheet_id (str), range_name (str), values (list) |
 
 \* Make sure you have granted the appropriate scopes for the application to perform the operations on the drive.
+
+## How to Create a Google OAuth 2.0 Client ID
+
+1. Go to Google Cloud Console:
+   https://console.cloud.google.com/
+
+2. Create or Select a Project:
+   - Click on the project dropdown at the top.
+   - Select an existing project or click "New Project" to create a new one.
+
+3. Enable Required APIs:
+   - Navigate to: APIs & Services > Library
+   - Search for and enable the following APIs:
+     - Google Drive API
+     - Google Docs API
+     - Google Sheets API (if needed)
+
+4. Configure OAuth Consent Screen:
+   - Go to: APIs & Services > OAuth consent screen
+   - Choose "External" for public apps, or "Internal" for private use.
+   - Fill in the required fields:
+     - App name
+     - User support email
+     - Developer contact info
+   - Add necessary scopes (e.g. `https://www.googleapis.com/auth/drive`)
+   - Save and continue
+
+5. Create OAuth 2.0 Credentials:
+   - Go to: APIs & Services > Credentials
+   - Click "Create Credentials" > "OAuth client ID"
+   - Choose the type based on your application:
+     - Web application
+     - Desktop app
+     - Other
+   - For web apps, add authorized redirect URIs (e.g. `https://your-app.com/auth/callback`)
+   - Add authorized JavaScript origins if required
+
+6. Save Your Credentials:
+   - After creating, Google will show:
+     - Client ID
+     - Client Secret
+   - Store these securely. You’ll need them in your app to authenticate users.
