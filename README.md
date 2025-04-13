@@ -1,4 +1,4 @@
-# Eeasy MCP GDrive Tools
+# Easy MCP GDrive Tools
 
 This is a set of tools for gdrive to be used with easy mcp server.<br>
 https://github.com/ground-creative/easy-mcp-python
