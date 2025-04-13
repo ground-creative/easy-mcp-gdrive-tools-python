@@ -62,3 +62,5 @@ The following tools are provided by this MCP server:
 | Create Spreadsheet | Creates a new Google Sheets document with the specified title | title (str), parent_folder_id (Optional [str]) |
 | Delete Rows from Spreadsheet | Deletes specified rows from an existing Google Sheets document | sheet_id (str), row_indices (list) |
 | Edit Rows of Spreadsheet | Edits rows in an existing Google Sheets document | sheet_id (str), range_name (str), values (list) |
+
+* Make sure you have granted the appropriate scopes for the application to perform the operations on the drive.
