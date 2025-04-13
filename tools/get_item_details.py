@@ -1,14 +1,17 @@
-from core.utils.logger import logger  # Importing the logger
-from core.utils.state import global_state  # Import global state
+from core.utils.logger import logger
+from core.utils.state import global_state
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
-from core.utils.env import EnvConfig  # Assuming EnvConfig is available here
+from core.utils.tools import doc_tag, doc_name
+from core.utils.env import EnvConfig
 
 
 @doc_tag("Drive")
-def get_item_details_tool(item_id: str) -> dict:
+@doc_name("Get item details")
+def gdrive_get_item_details_tool(item_id: str) -> dict:
     """
     Retrieves information about a file or folder in Google Drive based on its ID.
+
+    * Requires permission scope for the drive.
 
     Args:
     - item_id (str): The ID of the file or folder to retrieve information from.

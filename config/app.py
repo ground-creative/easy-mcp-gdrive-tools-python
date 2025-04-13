@@ -16,7 +16,8 @@ INFO_SERVICE_CONFIG = {
         "X-ACCESS-TOKEN": "(Required) The access token for authenticating with the services, you can get one once you are authenticated via the login process."
     },
     "notes": [
-        "All tools that use delete actions require confirmation, this is an experimental feature."
+        "- Ensure that the appropriate scopes are enabled in the Google authentication page for the services in use.",
+        "- All tools that use delete actions require confirmation, this is an experimental feature.",
     ],
 }
 

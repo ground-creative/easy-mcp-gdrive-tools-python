@@ -6,19 +6,22 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 import csv
 import json
 
 
 @doc_tag("Drive")
-def get_file_contents_tool(
+@doc_name("Get file contents")
+def gdrive_get_file_contents_tool(
     file_id: Annotated[
         str, Field(description="The ID of the file to retrieve contents from.")
     ],
 ) -> dict:
     """
     Retrieves the contents of a file based on its type (Google Docs, Google Sheets, PDF, text, JSON or CSV).
+
+    * Requires permission scope for the drive.
 
     Args:
     - file_id (str): The ID of the file to retrieve.

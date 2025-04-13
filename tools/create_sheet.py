@@ -5,11 +5,12 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
-@doc_tag("Sheets")
-def create_sheet_tool(
+@doc_tag("Spreadsheets")
+@doc_name("Create spreadsheet")
+def gdrive_create_sheet_tool(
     title: Annotated[
         str, Field(description="The title of the sheet to create. Ex: 'My Spreadsheet'")
     ],
@@ -22,6 +23,8 @@ def create_sheet_tool(
 ) -> dict:
     """
     Creates a new Google Sheets document with the specified title.
+
+    * Requires permission scope for spreadsheets.
 
     Args:
     - title (str): The title of the sheet to create.

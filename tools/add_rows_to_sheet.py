@@ -5,11 +5,12 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
-@doc_tag("Sheets")
-def add_rows_tool(
+@doc_tag("Spreadsheets")
+@doc_name("Add rows to spreadsheet")
+def gdrive_add_rows_to_sheet_tool(
     sheet_id: Annotated[
         str, Field(description="The ID of the sheet to add content to.")
     ],
@@ -22,6 +23,8 @@ def add_rows_tool(
 ) -> dict:
     """
     Adds content to an existing Google Sheets document.
+
+    * Requires permission scope for spreadsheets.
 
     Args:
     - sheet_id (str): The ID of the sheet to add content to.

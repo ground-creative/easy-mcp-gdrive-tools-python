@@ -5,15 +5,15 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
-from googleapiclient.http import MediaFileUpload  # Import MediaFileUpload
+from core.utils.tools import doc_tag, doc_name
+from googleapiclient.http import MediaFileUpload
 import json
-import csv
 import os
 
 
 @doc_tag("Drive")
-def create_file_tool(
+@doc_name("Create file")
+def gdrive_create_file_tool(
     title: Annotated[
         str, Field(description="The title or name of the file to create.")
     ],
@@ -30,6 +30,8 @@ def create_file_tool(
 ) -> dict:
     """
     Creates a new text, JSON, or CSV file with the specified content and uploads it to Google Drive.
+
+    * Requires permission scope for the drive.
 
     Args:
     - title (str): The title of the file to create.

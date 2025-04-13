@@ -4,15 +4,18 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
 @doc_tag("Drive")
-def search_items_by_name_tool(
+@doc_name("Search items by name")
+def gdrive_search_items_by_name_tool(
     name: Annotated[str, Field(description="The name of the files to search for.")],
 ) -> dict:
     """
     Searches for files and folders in Google Drive by their name.
+
+    * Requires permission scope for the drive.
 
     Args:
     - name (str): The name of the files or folders to search for.

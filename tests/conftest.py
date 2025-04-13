@@ -13,10 +13,10 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 from app.utils.credentials import attach_google_services
-from app.tools.create_folder import create_folder_tool
-from app.tools.delete_item import delete_item_tool
-from app.tools.create_document import create_document_tool
-from app.tools.create_sheet import create_sheet_tool
+from app.tools.create_folder import gdrive_create_folder_tool
+from app.tools.delete_item import gdrive_delete_item_tool
+from app.tools.create_document import gdrive_create_document_tool
+from app.tools.create_sheet import gdrive_create_sheet_tool
 
 
 @pytest.fixture(scope="module")
@@ -86,7 +86,7 @@ def create_folder_setup():
     global_state.set("test_folder_name", test_folder_name, True)
 
     # Create folder
-    response = create_folder_tool(folder_name=test_folder_name)
+    response = gdrive_create_folder_tool(folder_name=test_folder_name)
     assert response["status"] == "success", "Failed to create folder"
     folder_id = response["data"]["id"]
     global_state.set("test_folder_id", folder_id, True)
@@ -96,7 +96,7 @@ def create_folder_setup():
 
     # Teardown - delete the created folder with confirmation token
     # First, attempt to delete the folder without the confirmation token to get one
-    delete_response = delete_item_tool(file_id=folder_id)
+    delete_response = gdrive_delete_item_tool(file_id=folder_id)
 
     # Assert that the confirmation token is returned
     assert (
@@ -106,7 +106,7 @@ def create_folder_setup():
     confirmation_token = delete_response["confirmation_token"]
 
     # Now confirm the deletion using the received confirmation token
-    final_delete_response = delete_item_tool(
+    final_delete_response = gdrive_delete_item_tool(
         file_id=folder_id, confirmation_token=confirmation_token
     )
 
@@ -123,7 +123,7 @@ def create_doc_setup():
     subfolder_id = global_state.get("test_folder_id")
 
     # Create document
-    response = create_document_tool(
+    response = gdrive_create_document_tool(
         title=test_doc_title,
         content="testing mcp server",
         parent_folder_id=subfolder_id,
@@ -135,7 +135,7 @@ def create_doc_setup():
     # Yield so the test can run, then clean up
     yield document_id
 
-    delete_response = delete_item_tool(file_id=document_id)
+    delete_response = gdrive_delete_item_tool(file_id=document_id)
 
     # Assert that the confirmation token is returned
     assert (
@@ -145,7 +145,7 @@ def create_doc_setup():
     confirmation_token = delete_response["confirmation_token"]
 
     # Now confirm the deletion using the received confirmation token
-    final_delete_response = delete_item_tool(
+    final_delete_response = gdrive_delete_item_tool(
         file_id=document_id, confirmation_token=confirmation_token
     )
 
@@ -162,7 +162,7 @@ def create_sheet_setup():
     subfolder_id = global_state.get("test_folder_id")
 
     # Create sheet
-    response = create_sheet_tool(
+    response = gdrive_create_sheet_tool(
         title=test_sheet_title,
         parent_folder_id=subfolder_id,
     )
@@ -173,7 +173,7 @@ def create_sheet_setup():
     # Yield so the test can run, then clean up
     yield document_id
 
-    delete_response = delete_item_tool(file_id=document_id)
+    delete_response = gdrive_delete_item_tool(file_id=document_id)
 
     # Assert that the confirmation token is returned
     assert (
@@ -183,7 +183,7 @@ def create_sheet_setup():
     confirmation_token = delete_response["confirmation_token"]
 
     # Now confirm the deletion using the received confirmation token
-    final_delete_response = delete_item_tool(
+    final_delete_response = gdrive_delete_item_tool(
         file_id=document_id, confirmation_token=confirmation_token
     )
 

@@ -6,7 +6,7 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
 def get_file_extension(mime_type: str) -> str:
@@ -26,7 +26,8 @@ def get_file_extension(mime_type: str) -> str:
 
 
 @doc_tag("Drive")
-def get_items_tool(
+@doc_name("Get items")
+def gdrive_get_items_tool(
     folder_id: Annotated[
         Optional[str],
         Field(
@@ -37,6 +38,8 @@ def get_items_tool(
 ) -> dict:
     """
     Lists all items in a specified Google Drive folder or the root directory if no folder_id is provided.
+
+    * Requires permission scope for the drive.
 
     Args:
     - folder_id (Optional[str]): The ID of the folder to list files and folders from.

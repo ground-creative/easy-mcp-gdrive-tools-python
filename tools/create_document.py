@@ -5,11 +5,12 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
-@doc_tag("Docs")
-def create_document_tool(
+@doc_tag("Documents")
+@doc_name("Create document")
+def gdrive_create_document_tool(
     title: Annotated[
         str, Field(description="The title of the document to create. Ex: 'My Document'")
     ],
@@ -25,6 +26,8 @@ def create_document_tool(
 ) -> dict:
     """
     Creates a new Google Docs document with the specified content.
+
+    * Requires permission scope for documents
 
     Args:
     - title (str): The title of the document to create.

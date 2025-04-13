@@ -5,11 +5,12 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
 @doc_tag("Drive")
-def create_folder_tool(
+@doc_name("Create folder")
+def gdrive_create_folder_tool(
     folder_name: Annotated[
         str, Field(description="The name of the folder to create. Ex: 'New Folder'")
     ],
@@ -22,6 +23,8 @@ def create_folder_tool(
 ) -> dict:
     """
     Creates a new folder in Google Drive.
+
+    * Requires permission scope for the drive.
 
     Args:
     - folder_name (str): The name of the folder to create.

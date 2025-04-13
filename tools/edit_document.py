@@ -5,11 +5,12 @@ from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
 from googleapiclient.errors import HttpError
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 
-@doc_tag("Docs")
-def edit_document_tool(
+@doc_tag("Documents")
+@doc_name("Edit document")
+def gdrive_edit_document_tool(
     document_id: Annotated[
         str,
         Field(
@@ -23,6 +24,8 @@ def edit_document_tool(
 ) -> dict:  # Return structured dictionary
     """
     Edits an existing Google Docs document with the specified content.
+
+    * Requires permission scope for documents
 
     Args:
     - document_id (str): The ID of the Google Docs document to edit.

@@ -8,14 +8,15 @@ from core.utils.logger import logger
 from core.utils.state import global_state
 from core.utils.env import EnvConfig
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 # Define the validity duration for the confirmation token (in seconds)
 CONFIRMATION_TOKEN_VALIDITY_DURATION = 5 * 60  # 5 minutes
 
 
 @doc_tag("Drive")
-def delete_item_tool(
+@doc_name("Delete item")
+def gdrive_delete_item_tool(
     file_id: Annotated[
         str, Field(description="The ID of the file or folder to delete.")
     ],
@@ -30,6 +31,8 @@ def delete_item_tool(
 ) -> dict:
     """
     Deletes a specified item (file or folder) from Google Drive with confirmation logic.
+
+    * Requires permission scope for the drive.
 
     The function first checks if a confirmation token is provided.
     If not, it generates a token based on the item ID.

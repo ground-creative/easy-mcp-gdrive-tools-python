@@ -1,16 +1,19 @@
 from core.utils.logger import logger  # Importing the logger
 from core.utils.state import global_state  # Import global state
 from app.middleware.google.GoogleAuthMiddleware import check_access
-from core.utils.tools import doc_tag
+from core.utils.tools import doc_tag, doc_name
 
 # Define the validity duration for the confirmation token (in seconds)
 CONFIRMATION_TOKEN_VALIDITY_DURATION = 5 * 60  # 5 minutes
 
 
 @doc_tag("Drive")
-def move_item_tool(item_id: str, new_parent_id: str) -> dict:
+@doc_name("Move item")
+def gdrive_move_item_tool(item_id: str, new_parent_id: str) -> dict:
     """
     Moves a file or folder to a new folder in Google Drive.
+
+    * Requires permission scope for the drive.
 
     Args:
     - item_id (str): The ID of the file or folder to move.

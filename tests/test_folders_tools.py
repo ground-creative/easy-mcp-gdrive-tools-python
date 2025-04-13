@@ -1,8 +1,8 @@
 import os
 import sys
 from core.utils.state import global_state
-from app.tools.create_folder import create_folder_tool
-from app.tools.delete_item import delete_item_tool
+from app.tools.create_folder import gdrive_create_folder_tool
+from app.tools.delete_item import gdrive_delete_item_tool
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
@@ -14,11 +14,11 @@ def test_create_and_delete(auth_setup):
     )
     assert is_authenticated, "Not authenticated"
 
-    response = create_folder_tool(folder_name="test_create_and_delete_folder")
+    response = gdrive_create_folder_tool(folder_name="test_create_and_delete_folder")
     assert response["status"] == "success", "Failed to create folder"
     folder_id = response["data"]["id"]
 
-    delete_response = delete_item_tool(file_id=folder_id)
+    delete_response = gdrive_delete_item_tool(file_id=folder_id)
 
     # Assert that the confirmation token is returned
     assert (
@@ -28,7 +28,7 @@ def test_create_and_delete(auth_setup):
     confirmation_token = delete_response["confirmation_token"]
 
     # Now confirm the deletion using the received confirmation token
-    final_delete_response = delete_item_tool(
+    final_delete_response = gdrive_delete_item_tool(
         file_id=folder_id, confirmation_token=confirmation_token
     )
 
@@ -46,14 +46,14 @@ def test_create_and_delete_sub(auth_setup, create_folder_setup):
     )
     assert is_authenticated, "Not authenticated"
 
-    response = create_folder_tool(
+    response = gdrive_create_folder_tool(
         folder_name="test_create_and_delete_subfolder", parent_id=subfolder_id
     )
 
     assert response["status"] == "success", "Failed to create folder"
     folder_id = response["data"]["id"]
 
-    delete_response = delete_item_tool(file_id=folder_id)
+    delete_response = gdrive_delete_item_tool(file_id=folder_id)
 
     # Assert that the confirmation token is returned
     assert (
@@ -63,7 +63,7 @@ def test_create_and_delete_sub(auth_setup, create_folder_setup):
     confirmation_token = delete_response["confirmation_token"]
 
     # Now confirm the deletion using the received confirmation token
-    final_delete_response = delete_item_tool(
+    final_delete_response = gdrive_delete_item_tool(
         file_id=folder_id, confirmation_token=confirmation_token
     )
 
