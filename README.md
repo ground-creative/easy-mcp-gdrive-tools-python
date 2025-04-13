@@ -3,6 +3,22 @@
 This is a set of tools for gdrive to be used with easy mcp server.<br>
 https://github.com/ground-creative/easy-mcp-python
 
+## Key Features
+
+- Document Creation: Create Google Docs with custom titles and content. 
+- Document Editing: Modify existing Google Docs with new content. 
+- File Creation: Upload text, JSON, or CSV files to Google Drive with specified titles and content. 
+- Folder Creation: Organize Google Drive with custom folders. 
+- Item Deletion: Remove files or folders from Google Drive with confirmation. 
+- File Content Retrieval: View the contents of various file types in Google Drive. 
+- Item Details: Get specific information about files and folders in Google Drive. 
+- Item Listing: View all items in a specified folder or the root directory. 
+- Item Movement: Move files or folders to different folders in Google Drive. 
+- Spreadsheet Content Addition: Add content to existing Google Sheets. 
+- Spreadsheet Creation: Generate new Google Sheets with custom titles. 
+- Row Deletion: Delete specific rows from Google Sheets. 
+- Row Editing: Modify rows in existing Google Sheets.
+
 ## Installation
 
 1. Clone the repository from the root folder of the easy mcp installation:
