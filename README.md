@@ -5,25 +5,24 @@ https://github.com/ground-creative/easy-mcp-python
 
 ## Key Features
 
-- Document Creation: Create Google Docs with custom titles and content. 
-- Document Editing: Modify existing Google Docs with new content. 
-- File Creation: Upload text, JSON, or CSV files to Google Drive with specified titles and content. 
-- Folder Creation: Organize Google Drive with custom folders. 
-- Item Deletion: Remove files or folders from Google Drive with confirmation. 
-- File Content Retrieval: View the contents of various file types in Google Drive. 
-- Item Details: Get specific information about files and folders in Google Drive. 
-- Item Listing: View all items in a specified folder or the root directory. 
-- Item Movement: Move files or folders to different folders in Google Drive. 
-- Spreadsheet Content Addition: Add content to existing Google Sheets. 
-- Spreadsheet Creation: Generate new Google Sheets with custom titles. 
-- Row Deletion: Delete specific rows from Google Sheets. 
-- Row Editing: Modify rows in existing Google Sheets.
+- **Document Creation**: Create Google Docs with custom titles and content.
+- **Document Editing**: Modify existing Google Docs with new content.
+- **File Creation**: Upload text, JSON, or CSV files to Google Drive with specified titles and content.
+- **Folder Creation**: Organize Google Drive with custom folders.
+- **Item Deletion**: Remove files or folders from Google Drive with confirmation.
+- **File Content** Retrieval: View the contents of various file types in Google Drive.
+- **Item Details**: Get specific information about files and folders in Google Drive.
+- **Item Listing**: View all items in a specified folder or the root directory.
+- **Item Movement**: Move files or folders to different folders in Google Drive.
+- **Spreadsheet Content Addition**: Add content to existing Google Sheets.
+- **Spreadsheet Creation**: Generate new Google Sheets with custom titles.
+- **Row Deletion**: Delete specific rows from Google Sheets.
+- **Row Editing**: Modify rows in existing Google Sheets.
 
 ## Authentication
 
 This application uses Google's OAuth service to authenticate users.
 To use this app, you must create an OAuth 2.0 Client ID in the Google Cloud Console and configure the appropriate scopes for your application.
-
 
 ## Installation
 
@@ -68,22 +67,22 @@ The following tools are provided by this MCP server:
 
 ## Tools and Specifications
 
-| Tool Name | Description | Parameters Required |
-|---|---|---|
-| Create Document | Creates a new Google Docs document with the specified content | title (str), content (str), parent_folder_id (Optional [str]) |
-| Edit Document | Edits an existing Google Docs document with the specified content | document_id (str), new_content (str) |
-| Create File | Creates a new text, JSON, or CSV file with the specified content and uploads it to Google Drive | title (str), content (str), file_type (str), parent_folder_id (Optional [str]) |
-| Create Folder | Creates a new folder in Google Drive | folder_name (str), parent_id (Optional [str]) |
-| Delete Item | Deletes a specified item (file or folder) from Google Drive with confirmation logic | file_id (str), confirmation_token (Optional [str]) |
-| Get File Contents | Retrieves the contents of a file based on its type (Google Docs, Google Sheets, PDF, text, JSON, or CSV) | file_id (str) |
-| Get Item Details | Retrieves information about a file or folder in Google Drive based on its ID | item_id (str) |
-| Get Items | Lists all items in a specified Google Drive folder or the root directory if no folder ID is provided | folder_id (Optional [str]) |
-| Move Item | Moves a file or folder to a new folder in Google Drive | item_id (str), new_parent_id (str) |
-| Search Items by Name | Searches for files and folders in Google Drive by their name | name (str) |
-| Add Rows to Spreadsheet | Adds content to an existing Google Sheets document | sheet_id (str), values (list) |
-| Create Spreadsheet | Creates a new Google Sheets document with the specified title | title (str), parent_folder_id (Optional [str]) |
-| Delete Rows from Spreadsheet | Deletes specified rows from an existing Google Sheets document | sheet_id (str), row_indices (list) |
-| Edit Rows of Spreadsheet | Edits rows in an existing Google Sheets document | sheet_id (str), range_name (str), values (list) |
+| Tool Name                    | Description                                                                                              | Parameters Required                                                            |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Create Document              | Creates a new Google Docs document with the specified content                                            | title (str), content (str), parent_folder_id (Optional [str])                  |
+| Edit Document                | Edits an existing Google Docs document with the specified content                                        | document_id (str), new_content (str)                                           |
+| Create File                  | Creates a new text, JSON, or CSV file with the specified content and uploads it to Google Drive          | title (str), content (str), file_type (str), parent_folder_id (Optional [str]) |
+| Create Folder                | Creates a new folder in Google Drive                                                                     | folder_name (str), parent_id (Optional [str])                                  |
+| Delete Item                  | Deletes a specified item (file or folder) from Google Drive with confirmation logic                      | file_id (str), confirmation_token (Optional [str])                             |
+| Get File Contents            | Retrieves the contents of a file based on its type (Google Docs, Google Sheets, PDF, text, JSON, or CSV) | file_id (str)                                                                  |
+| Get Item Details             | Retrieves information about a file or folder in Google Drive based on its ID                             | item_id (str)                                                                  |
+| Get Items                    | Lists all items in a specified Google Drive folder or the root directory if no folder ID is provided     | folder_id (Optional [str])                                                     |
+| Move Item                    | Moves a file or folder to a new folder in Google Drive                                                   | item_id (str), new_parent_id (str)                                             |
+| Search Items by Name         | Searches for files and folders in Google Drive by their name                                             | name (str)                                                                     |
+| Add Rows to Spreadsheet      | Adds content to an existing Google Sheets document                                                       | sheet_id (str), values (list)                                                  |
+| Create Spreadsheet           | Creates a new Google Sheets document with the specified title                                            | title (str), parent_folder_id (Optional [str])                                 |
+| Delete Rows from Spreadsheet | Deletes specified rows from an existing Google Sheets document                                           | sheet_id (str), row_indices (list)                                             |
+| Edit Rows of Spreadsheet     | Edits rows in an existing Google Sheets document                                                         | sheet_id (str), range_name (str), values (list)                                |
 
 \* Make sure you have granted the appropriate scopes for the application to perform the operations on the drive.
 
@@ -93,10 +92,12 @@ The following tools are provided by this MCP server:
    https://console.cloud.google.com/
 
 2. Create or Select a Project:
+
    - Click on the project dropdown at the top.
    - Select an existing project or click "New Project" to create a new one.
 
 3. Enable Required APIs:
+
    - Navigate to: APIs & Services > Library
    - Search for and enable the following APIs:
      - Google Drive API
@@ -104,6 +105,7 @@ The following tools are provided by this MCP server:
      - Google Sheets API (if needed)
 
 4. Configure OAuth Consent Screen:
+
    - Go to: APIs & Services > OAuth consent screen
    - Choose "External" for public apps, or "Internal" for private use.
    - Fill in the required fields:
@@ -118,6 +120,7 @@ The following tools are provided by this MCP server:
    - Save and continue
 
 5. Create OAuth 2.0 Credentials:
+
    - Go to: APIs & Services > Credentials
    - Click "Create Credentials" > "OAuth client ID"
    - Choose the type based on your application:
@@ -132,3 +135,17 @@ The following tools are provided by this MCP server:
      - Client ID
      - Client Secret
    - Store these securely. You’ll need them in your app to authenticate users.
+
+# Screenshots
+
+Server info page:
+![Server info page](screenshots/1.png)
+
+Google oAuth page
+![Google oAuth page](screenshots/3.png)
+
+Google psermission scopes page
+![Google psermission scopes page](screenshots/4.png)
+
+User authenticated page
+![User Aunthenticated page](screenshots/5.png)
