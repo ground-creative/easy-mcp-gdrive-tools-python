@@ -73,7 +73,7 @@ def gdrive_delete_item_tool(
         confirmation_token = base64.b64encode(params_string.encode()).decode()
         logger.info(f"Generated confirmation token: {confirmation_token}")
         return {
-            "message": f"Confirmation required to delete item with ID '{file_id}'. Confirm deletion with user and use the given confirmation_token with the same request parameters.",
+            "message": f"Confirmation required to delete item with ID '{file_id}', confirm deletion with user and use the given confirmation_token with the same request parameters.",
             "confirmation_token": confirmation_token,
             "action": "confirm_deletion",
         }
