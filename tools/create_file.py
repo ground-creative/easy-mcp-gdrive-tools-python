@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from typing_extensions import Annotated
 from pydantic import Field
 from core.utils.logger import logger
@@ -17,7 +17,9 @@ def gdrive_create_file_tool(
     title: Annotated[
         str, Field(description="The title or name of the file to create.")
     ],
-    content: Annotated[str, Field(description="The content to be added to the file.")],
+    content: Annotated[
+        Union[str, dict], Field(description="The content to be added to the file.")
+    ],
     file_type: Annotated[
         str, Field(description="The type of the file to create (text, json, or csv).")
     ],
@@ -41,6 +43,12 @@ def gdrive_create_file_tool(
 
     Returns:
     - A dictionary indicating success or error, without JSON serialization.
+
+    Example Request Payloads:
+
+    gdrive_create_file_tool(title="example.txt", content="Hello, this is a text file.", file_type="text") # text file
+    gdrive_create_file_tool(title="example.json", content={"name": "John", "age": 30}, file_type="json") # json file
+    gdrive_create_file_tool(title="example.csv", content="Name,Age\\nJohn,30\\nJane,28", file_type="csv") # csv file
     """
 
     # Check authentication for Google Drive
@@ -67,12 +75,34 @@ def gdrive_create_file_tool(
             mime_type = "text/plain"
 
         elif file_type == "json":
-            # Try to parse the content as JSON
+            # Handle JSON content - can be string or dict
             try:
-                json_content = json.loads(content)
-                file_content = json.dumps(json_content, indent=4)
-            except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid JSON content."}
+                # If the content is a string, try to parse it as JSON
+                if isinstance(content, str):
+                    try:
+                        json_content = json.loads(
+                            content
+                        )  # Try to parse the string as JSON
+                        file_content = json.dumps(json_content, indent=4)
+                    except json.JSONDecodeError:
+                        return {
+                            "status": "error",
+                            "error": "Invalid JSON content in string.",
+                        }
+                elif isinstance(
+                    content, dict
+                ):  # If it's already a dict, convert to JSON
+                    file_content = json.dumps(content, indent=4)
+                else:
+                    return {
+                        "status": "error",
+                        "error": "Invalid content type for JSON.",
+                    }
+            except Exception as e:
+                return {
+                    "status": "error",
+                    "error": f"Error processing JSON content: {str(e)}",
+                }
             mime_type = "application/json"
 
         elif file_type == "csv":

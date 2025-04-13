@@ -21,7 +21,7 @@ def gdrive_edit_document_tool(
         str,
         Field(description="The new content to replace in the document."),
     ],
-) -> dict:  # Return structured dictionary
+) -> dict:
     """
     Edits an existing Google Docs document with the specified content.
 

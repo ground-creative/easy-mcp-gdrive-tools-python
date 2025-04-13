@@ -1,0 +1,46 @@
+{
+    "en": {
+        "gdrive_add_rows_to_sheet_tool": {
+            "request-start": "Adding row to the sheet with id `{{ params.sheet_id }}`."
+        },
+        "gdrive_create_document_tool": {
+            "request-start": "Creating document titled `{{ params.title }}`{% if params.parent_folder_id %} in folder with id `{{ params.parent_folder_id }}`{% else %} in root folder{% endif %} of drive."
+        },
+        "gdrive_create_file_tool": {
+            "request-start": "Creating a {{ params.file_type }} file titled `{{ params.title }}`{% if params.parent_folder_id %} in folder with id `{{ params.parent_folder_id }}`{% else %} in root folder{% endif %} of drive."
+        },
+        "gdrive_create_folder_tool": {
+            "request-start": "Creating folder titled `{{ params.folder_name }}`{% if params.parent_id %} in folder with id `{{ params.parent_id }}`{% else %} in root folder{% endif %} of drive."
+        },
+        "gdrive_create_sheet_tool": {
+            "request-start": "Creating spreadsheet titled `{{ params.title }}`{% if params.parent_folder_id %} in folder with id `{{ params.parent_folder_id }}`{% else %} in root folder{% endif %} of drive."
+        },
+        "gdrive_delete_item_tool": {
+            "request-start": "Attempting to delete item with ID `{{ params.file_id }}`{% if params.confirmation_token %} using a confirmation token{% else %}{% endif %}."
+        },
+        "gdrive_delete_rows_from_sheet_tool": {
+            "request-start": "Attempting to delete row(s) from the sheet with ID `{{ params.sheet_id }}`."
+        },
+        "gdrive_get_file_contents_tool": {
+            "request-start": "Retrieving contents of file with ID `{{ params.file_id }}` from Google Drive."
+        },
+        "gdrive_edit_document_tool": {
+            "request-start": "Editing the document with id `{{ params.document_id }}` by replacing content."
+        },
+        "gdrive_edit_rows_of_sheet_tool": {
+            "request-start": "Editing values in the sheet with id `{{ params.sheet_id }}` within range `{{ params.range_name }}`."
+        },
+        "gdrive_get_item_details_tool": {
+            "request-start": "Retrieving details for the Drive item with id `{{ params.item_id }}`."
+        },
+        "gdrive_get_items_tool": {
+            "request-start": "Listing items in the {{ 'root folder' if not params.folder_id else 'folder with id `' + params.folder_id+ '`' }}."
+        },
+        "gdrive_move_item_tool": {
+            "request-start": "Moving item with id `{{ params.item_id }}` to folder with id `{{ params.new_parent_id }}`."
+        },
+        "gdrive_search_items_by_name_tool": {
+            "request-start": "Searching for items in Drive with the name `{{ params.name }}`."
+        }
+    }
+}

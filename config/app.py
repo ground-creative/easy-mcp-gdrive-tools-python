@@ -4,6 +4,7 @@ from core.utils.env import EnvConfig
 SERVICES = [
     "core.services.server_info",  # server info html page
     "app.services.google_auth",
+    "app.services.default_tools_messages",
 ]
 
 INFO_SERVICE_CONFIG = {

@@ -88,7 +88,7 @@ def test_create_and_delete_json(auth_setup):
 
     response = gdrive_create_file_tool(
         title="test_create_and_delete_json",
-        content='{"message": "Hello, world!", "status": "ok"}',
+        content={"message": "Hello, world!", "status": "ok"},
         file_type="json",
     )
     assert response["status"] == "success", "Failed to create JSON file"

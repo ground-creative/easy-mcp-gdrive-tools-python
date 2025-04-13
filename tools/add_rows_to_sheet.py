@@ -32,6 +32,11 @@ def gdrive_add_rows_to_sheet_tool(
 
     Returns:
     - Dictionary indicating success or error.
+
+    Example Request Payload:
+        gdrive_add_rows_to_sheet_tool(
+            sheet_id="1AbcD3FgHiJkLmnopQRsTuvWxYzZ1234567890",
+            values=[["Name", "Email", "Age"],["Alice", "alice@example.com", "30"]])
     """
 
     # Check authentication

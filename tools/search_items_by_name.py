@@ -40,7 +40,7 @@ def gdrive_search_items_by_name_tool(
 
     try:
         # Construct the query to search for files and folders by name
-        query = f"name='{name}'"
+        query = f"name contains '{name}'"
 
         # Execute the search
         results = (
