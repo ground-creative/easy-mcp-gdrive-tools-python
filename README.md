@@ -110,7 +110,11 @@ The following tools are provided by this MCP server:
      - App name
      - User support email
      - Developer contact info
-   - Add necessary scopes (e.g. `https://www.googleapis.com/auth/drive`)
+   - Add necessary scopes:
+     - `https://www.googleapis.com/auth/drive`
+     - `https://www.googleapis.com/auth/documents`
+     - `https://www.googleapis.com/auth/spreadsheets`
+     - `openid`
    - Save and continue
 
 5. Create OAuth 2.0 Credentials:
