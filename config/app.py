@@ -18,7 +18,7 @@ INFO_SERVICE_CONFIG = {
     },
     "notes": [
         "- Ensure that the appropriate scopes are enabled in the Google authentication page for the services in use.",
-        "- All tools that use delete actions require confirmation, this is an experimental feature. Instruct the language model to require confirmation from the user for this feature to work effectively",
+        "- All tools that perform delete actions require confirmation. This is an experimental feature. Instruct the language model to prompt the user for confirmation for it to work effectively.",
     ],
 }
 
