@@ -20,6 +20,8 @@ INFO_SERVICE_CONFIG = {
         "- Ensure that the appropriate scopes are enabled in the Google authentication page for the services in use.",
         "- All tools that perform delete actions require confirmation. This is an experimental feature. Instruct the language model to prompt the user for confirmation for it to work effectively.",
     ],
+    "privacy_policy_url": f"{EnvConfig.get('SITE_URL')}/en/privacy-policy",
+    "terms_of_service_url": f"{EnvConfig.get('SITE_URL')}/en/terms-of-service",
 }
 
 PRESTART_HOOKS = {
