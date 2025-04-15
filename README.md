@@ -137,7 +137,7 @@ Server info page:
 Google oAuth page
 ![Google oAuth page](screenshots/3.png)
 
-Google psermission scopes page
+Google permission scopes page
 ![Google psermission scopes page](screenshots/4.png)
 
 User authenticated page
