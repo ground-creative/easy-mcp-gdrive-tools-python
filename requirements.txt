@@ -4,3 +4,5 @@ google-api-python-client==2.166.0
 PyPDF2==3.0.1
 uvicorn==0.35.0
 fastapi==0.116.1
+fastmcp==2.11.3
+Jinja2==3.1.6
